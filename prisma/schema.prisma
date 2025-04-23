@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Permissao {
+  DEV
+  ADM
+  TEC
+  USR
+}
+
+enum StatusAgendamento {
+  AGENDADO
+  CANCELADO
+  CONCLUIDO
+}
+
+model Usuario {
+  id            String    @id @default(uuid())
+  nome          String
+  nomeSocial    String?
+  login         String    @unique
+  email         String    @unique
+  permissao     Permissao @default(USR)
+  status        Boolean   @default(true)
+  avatar        String?   @db.Text
+
+  ultimoLogin   DateTime  @default(now())
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @default(now()) @updatedAt
+
+  agendamentos  Agendamento[]
+
+  @@map("usuarios")
+}
+
+model Agendamento {
+  id              String            @id @default(uuid())
+  municipe        String?
+  rg              String?
+  cpf             String?
+  processo        String?
+  dataInicio      DateTime
+  dataFim         DateTime
+  importado       Boolean           @default(false)
+  legado          Boolean           @default(false)
+  resumo          String?           @db.Text
+  motivoId        String?
+  coordenadoriaId String?
+  tecnicoId       String?
+  email           String?
+  status          StatusAgendamento @default(AGENDADO)
+
+  criadoEm        DateTime          @default(now())
+  atualizadoEm    DateTime          @default(now()) @updatedAt
+
+  motivo          Motivo?           @relation(fields: [motivoId], references: [id], onDelete: NoAction)
+  coordenadoria   Coordenadoria?    @relation(fields: [coordenadoriaId], references: [id], onDelete: NoAction)
+  tecnico         Usuario?          @relation(fields: [tecnicoId], references: [id], onDelete: NoAction)
+
+  @@map("agendamentos")
+}
+
+model Motivo {
+  id              String          @id @default(uuid())
+  texto           String          @unique
+  status          Boolean         @default(true)
+
+  criadoEm        DateTime        @default(now())
+  atualizadoEm    DateTime        @default(now()) @updatedAt
+
+  agendamentos    Agendamento[]
+
+  @@map("motivos")
+}
+
+model Coordenadoria {
+  id            String   @id @default(uuid())
+  sigla         String   @unique
+  status        Boolean  @default(true)
+
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @default(now()) @updatedAt
+
+  agendamentos    Agendamento[]
+
+  @@map("coordenadorias")
+}
