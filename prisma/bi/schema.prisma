@@ -1,0 +1,9 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/bi/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("BI_DATABASE_URL")
+}

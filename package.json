@@ -6,9 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/main/seed.ts"
   },
   "scripts": {
+    "db": "bash prisma/prisma.sh",
+    "migrate": "prisma migrate dev --schema=prisma/main/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

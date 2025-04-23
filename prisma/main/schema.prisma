@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/main/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MAIN_DATABASE_URL")
+}
+
+enum Permissao {
+  DEV
+  ADM
+  USR
+}
+
+model Usuario {
+  id            String    @id @default(uuid())
+  nome          String
+  nomeSocial    String?
+  login         String    @unique
+  email         String    @unique
+  permissao     Permissao @default(USR)
+  status        Boolean   @default(true)
+  avatar        String?   @db.Text
+
+  ultimoLogin   DateTime  @default(now())
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @default(now()) @updatedAt
+
+  @@map("usuarios")
+}
