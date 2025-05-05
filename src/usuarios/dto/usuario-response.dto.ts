@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { Permissao } from "@prisma/client"
+import { Permissao } from "@prisma/main/client"
 
 export class UsuarioResponseDTO {
     @ApiProperty()

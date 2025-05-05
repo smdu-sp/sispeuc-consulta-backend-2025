@@ -13,7 +13,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/AuthRequest';
 import { IsPublic } from './decorators/is-public.decorator';
 import { UsuarioAtual } from './decorators/usuario-atual.decorator';
-import { Usuario } from '@prisma/client';
+import { Usuario } from '@prisma/main/client';
 import { RefreshAuthGuard } from './guards/refresh.guard';
 import {
   ApiBearerAuth,

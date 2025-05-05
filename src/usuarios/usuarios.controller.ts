@@ -13,7 +13,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Permissoes } from 'src/auth/decorators/permissoes.decorator';
 import { UsuarioAtual } from 'src/auth/decorators/usuario-atual.decorator';
-import { Usuario } from '@prisma/client';
+import { Usuario } from '@prisma/main/client';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BuscarNovoResponseDTO, UsuarioAutorizadoResponseDTO, UsuarioDesativadoResponseDTO, UsuarioPaginadoResponseDTO, UsuarioResponseDTO } from './dto/usuario-response.dto';
 
@@ -50,7 +50,7 @@ export class UsuariosController {
     return this.usuariosService.buscarPorId(id);
   }
 
-  @Permissoes('ADM', 'TEC', 'USR')
+  @Permissoes('ADM', 'USR')
   @Patch('atualizar/:id')
   atualizar(
     @UsuarioAtual() usuario: Usuario,
@@ -64,12 +64,6 @@ export class UsuariosController {
   @Get('lista-completa')
   listaCompleta(): Promise<UsuarioResponseDTO[]> {
     return this.usuariosService.listaCompleta();
-  }
-
-  @Permissoes('ADM')
-  @Get('buscar-tecnicos')
-  buscarTecnicos(): Promise<{ id: string, nome: string }[]> {
-    return this.usuariosService.buscarTecnicos();
   }
 
   @Permissoes('ADM')

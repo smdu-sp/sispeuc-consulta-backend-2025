@@ -1,5 +1,4 @@
-import { Usuario } from '@prisma/client';
-import { UsuarioPayload } from 'src/auth/models/UsuarioPayload';
+import { Usuario } from '@prisma/main/client';
 import { UsuarioToken } from 'src/auth/models/UsuarioToken';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';

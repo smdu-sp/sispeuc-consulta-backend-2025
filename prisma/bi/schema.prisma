@@ -1,9 +1,234 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../../node_modules/@prisma/bi/client"
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/bi/client"
+  previewFeatures = ["views"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlserver"
   url      = env("BI_DATABASE_URL")
+}
+
+view Processos {
+  id_processo        BigInt    @default(autoincrement())
+  Sistema            String?   @db.VarChar(20)
+  Processo           String    @db.VarChar(20) @unique
+  DtAutuacaoProcesso DateTime? @db.Date
+
+  Assuntos           Assuntos[]
+
+  @@id([id_processo])
+}
+
+view Assuntos {
+  id_assunto              BigInt    @default(autoincrement())
+  Sistema                 String?   @db.VarChar(20)
+  Processo                String?    @db.VarChar(20)
+  CodigoPedido            String?   @db.VarChar(50)
+  DtPedidoProtocolo       DateTime? @db.Date
+  AssuntoCod              String?   @db.VarChar(5)
+  Assunto                 String?   @db.VarChar(500)
+  Aditivo                 String?   @db.VarChar(50)
+  TipoRequerimento        String?   @db.VarChar(50)
+  GrupoSituacaoAssunto    String?   @db.VarChar(50)
+  SituacaoAssunto         String?   @db.VarChar(50)
+  NumDocumento            String?   @db.VarChar(20)
+  NumDocIrregularidade    String?   @db.VarChar(50)
+  DtEmissaoDocumento      DateTime? @db.Date
+  GrupoStatusDocumento    String?   @db.VarChar(20)
+  StatusDocumento         String?   @db.VarChar(20)
+  Subprefeitura           String?   @db.VarChar(50)
+  Distrito                String?   @db.VarChar(50)
+
+  Processo_relacao        Processos? @relation(fields: [Processo], references: [Processo], onDelete: NoAction, onUpdate: NoAction)
+  Despachos               Despachos[]
+  ComuniqueSes            ComuniqueSes[]
+  Cadastros               Cadastros[]
+  Categorias              Categorias[]
+  Interessados            Interessados[]
+  Zonas_Usos              Zonas_Usos[]
+  Amparos_Notas_Ressalvas Amparos_Notas_Ressalvas[]
+  Enderecos               Enderecos[]
+
+  @@id([id_assunto])
+}
+
+view Despachos {
+  id_despacho            BigInt    @default(autoincrement())
+  id_assunto             BigInt
+  Sistema                String?   @db.VarChar(20)
+  Processo               String?   @db.VarChar(20)
+  Protocolo              String?   @db.VarChar(20)
+  CodigoPedido           String?   @db.VarChar(50)
+  SituacaoDespacho       String?   @db.VarChar(50)
+  UnidadeDespacho        String?   @db.VarChar(100)
+  CodUnidDespachoSimproc String?   @db.VarChar(100)
+  ResponsavelDespacho    String?   @db.VarChar(100)
+  ResponsavelDespachoId  String?   @db.VarChar(100)
+  OperadorDespacho       String?   @db.VarChar(100)
+  OperadorDespachoId     String?   @db.VarChar(100)
+  DtEmissao              DateTime? @db.Date
+  DtPublicacaoDOC        DateTime? @db.Date
+
+  Assuntos               Assuntos @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_despacho])
+}
+
+view ComuniqueSes {
+  id_comuniquese            BigInt    @default(autoincrement())
+  id_assunto                BigInt
+  Sistema                   String?   @db.VarChar(20)
+  Processo                  String?   @db.VarChar(20)
+  Protocolo                 String?   @db.VarChar(20)
+  CodigoPedido              String?   @db.VarChar(50)
+  CodigoComuniquese         String?   @db.VarChar(50)
+  SituacaoComuniqueSe       String?   @db.VarChar(50)
+  UnidadeComuniquese        String?   @db.VarChar(100)
+  CodUnidComuniqueseSimproc String?   @db.VarChar(100)
+  ResponsavelComuniqueSe    String?   @db.VarChar(100)
+  ResponsavelComuniqueSeId  String?   @db.VarChar(100)
+  OperadorComuniqueSe       String?   @db.VarChar(100)
+  OperadorComuniqueSeId     String?   @db.VarChar(100)
+  DtEmissao                 DateTime? @db.Date
+  DtPublicacaoDOC           DateTime? @db.Date
+  DtInicioPrazoAtendimento  DateTime? @db.Date
+
+  Assuntos               Assuntos @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_comuniquese])
+}
+
+view Cadastros {
+  id_sql_incra    BigInt            @default(autoincrement())
+  id_assunto      BigInt
+  Sistema         String?           @db.VarChar(20)
+  Processo        String?           @db.VarChar(20)
+  Protocolo       String?           @db.VarChar(20)
+  CodigoPedido    String?           @db.VarChar(50)
+  SQL_Incra       String?           @db.VarChar(50)
+  TipoSQL_Incra   String?           @db.VarChar(100)
+  
+  Assunto         Assuntos          @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_sql_incra, id_assunto])
+}
+
+view Categorias {
+  id_categoria        BigInt    @default(autoincrement())
+  id_assunto          BigInt
+  Sistema             String?   @db.VarChar(20)
+  Processo            String?   @db.VarChar(20)
+  Protocolo           String?   @db.VarChar(20)
+  CodigoPedido        String?   @db.VarChar(50)
+  Categoria           String?   @db.VarChar(50)
+  DescCategoria       String?   @db.VarChar(500)
+  Subcategoria        String?   @db.VarChar(500)
+  DescSubcategoria    String?   @db.VarChar(500)
+  GrupoAtividade      String?   @db.VarChar(500)
+  DescGrupoAtividade  String?   @db.VarChar(1000)
+  Atividade           String?   @db.VarChar(500)
+  DescAtividade       String?   @db.VarChar(500)
+
+  Assunto             Assuntos  @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_categoria])
+}
+
+view Interessados {
+  id_interessado        BigInt    @default(autoincrement())
+  id_assunto            BigInt
+  Sistema               String?   @db.VarChar(20)
+  Protocolo             String?   @db.VarChar(50)
+  Processo              String?   @db.VarChar(20)
+  CodigoPedido          String?   @db.VarChar(50)
+  NomeInteressado       String?   @db.VarChar(255)
+  Atribuicao            String?   @db.VarChar(50)
+  TipoPessoaInteressado String?   @db.VarChar(50)
+  CPF_CNPJ_Interessado  String?   @db.VarChar(50)
+  Responsavel           String?   @db.VarChar(100)
+  NumConselho           String?   @db.VarChar(50)
+
+  Assunto               Assuntos  @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_interessado])
+}
+
+view Zonas_Usos {
+  id_zonauso   BigInt  @default(autoincrement())
+  id_assunto   BigInt
+  Sistema      String? @db.VarChar(20)
+  Protocolo    String? @db.VarChar(20)
+  Processo     String? @db.VarChar(20)
+  CodigoPedido String? @db.VarChar(50)
+  TipoZonaUso  String? @db.VarChar(20)
+  ZonaUso      String? @db.VarChar(150)
+  SiglaZonaUso String? @db.VarChar(50)
+
+  Assunto               Assuntos  @relation(fields: [id_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_zonauso])
+}
+
+view Amparos_Notas_Ressalvas {
+  id_prata_amparo_nota_ressalva BigInt    @default(autoincrement())
+  id_prata_assunto              BigInt
+  Sistema                       String?   @db.VarChar(20)
+  Processo                      String?   @db.VarChar(20)
+  Protocolo                     String?   @db.VarChar(20)
+  CodigoPedido                  String?   @db.VarChar(50)
+  TipoAmparoNotaRessalva        String?   @db.VarChar(1)
+  CodAmparoNotaRessalva         String?   @db.VarChar(20)
+  SeqAmparoNotaRessalva         Int?
+  TxtAmparoNotaRessalva         String?   @db.VarChar(4000)
+  TxtResumAmparoNotaRessalva    String?   @db.VarChar(500)
+
+  Assunto                       Assuntos  @relation(fields: [id_prata_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_prata_amparo_nota_ressalva])
+}
+
+view Enderecos {
+  id_prata_endereco           BigInt    @default(autoincrement())
+  id_prata_assunto            BigInt
+  Sistema                     String?   @db.VarChar(20)
+  Processo                    String?   @db.VarChar(20)
+  Protocolo                   String?   @db.VarChar(20)
+  CodigoPedido                String?   @db.VarChar(50)
+  CodLog                      String?   @db.VarChar(50)
+  Logradouro                  String?   @db.VarChar(200)
+  Numero                      String?   @db.VarChar(50)
+  Complemento                 String?   @db.VarChar(200)
+  Bairro                      String?   @db.VarChar(100)
+  Cep                         String?   @db.VarChar(50)
+  Subprefeitura               String?   @db.VarChar(50)
+  Distrito                    String?   @db.VarChar(50)
+  origemEnderecoSisacoe       String?   @db.VarChar(20)
+
+  Assunto                     Assuntos  @relation(fields: [id_prata_assunto], references: [id_assunto], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id_prata_endereco])
+}
+
+view SQLsCondominio {
+  setor      String     @db.VarChar(3)
+  quadra     String     @db.VarChar(3)
+  condominio Decimal    @db.Decimal(3, 0)
+  sql        String     @db.VarChar(20)
+  origem_sql Decimal?   @db.Decimal(11, 0)
+
+  @@id([setor, quadra, condominio])
+}
+
+view SQLsFiliacao {
+  sqlPai               String       @db.VarChar(20)
+  sqlFilho             String       @db.VarChar(20)
+  AnoMesInicial        String?      @db.VarChar(5)
+  AnoMesFinal          String?      @db.VarChar(5)
+  origem_sqlPai        Decimal?     @db.Decimal(11, 0)
+  origem_sqlFilho      Decimal?     @db.Decimal(11, 0)
+  origem_mesAnoInicial Decimal?     @db.Decimal(4, 0)
+  origem_mesAnoFinal   Decimal?     @db.Decimal(4, 0)
+  	
+  @@id([sqlPai, sqlFilho])
 }

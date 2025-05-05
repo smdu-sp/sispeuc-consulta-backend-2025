@@ -9,7 +9,7 @@ import {
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { $Enums, Permissao, Usuario } from '@prisma/client';
+import { $Enums, Permissao, Usuario } from '@prisma/main/client';
 import { AppService } from 'src/app.service';
 import { Client as LdapClient } from 'ldapts';
 import { BuscarNovoResponseDTO, UsuarioAutorizadoResponseDTO, UsuarioPaginadoResponseDTO, UsuarioResponseDTO } from './dto/usuario-response.dto';
@@ -49,16 +49,6 @@ export class UsuariosService {
       orderBy: { nome: 'asc' },
     });
     if (!lista || lista.length == 0) throw new ForbiddenException('Nenhum usuário encontrado.');
-    return lista;
-  }
-
-  async buscarTecnicos(): Promise<{ id: string, nome: string }[]> {
-    const lista: { id: string, nome: string }[] = await this.prisma.usuario.findMany({
-      where: { permissao: 'TEC' },
-      orderBy: { nome: 'asc' },
-      select: { id: true, nome: true },
-    });
-    if (!lista || lista.length == 0) throw new ForbiddenException('Nenhum técnico encontrado.');
     return lista;
   }
 

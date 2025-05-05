@@ -5,7 +5,7 @@ import { AppService } from 'src/app.service';
 import { SguService } from 'src/prisma/sgu.service';
 import { UsuariosService } from '../usuarios.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { $Enums, Usuario } from '@prisma/client';
+import { $Enums, Usuario } from '@prisma/main/client';
 import { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import {

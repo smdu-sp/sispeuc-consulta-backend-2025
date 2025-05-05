@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
-import { Usuario } from '@prisma/client';
+import { Usuario } from '@prisma/main/client';
 import { UsuarioPayload } from './models/UsuarioPayload';
 import { JwtService } from '@nestjs/jwt';
 import { UsuarioToken } from './models/UsuarioToken';
@@ -52,7 +52,6 @@ export class AuthService {
     try {
       await client.bind(`${login}${process.env.LDAP_DOMAIN}`, senha);
     } catch (error) {
-      console.log(error);
       throw new UnauthorizedException('Credenciais incorretas.');
     }
     await client.unbind();

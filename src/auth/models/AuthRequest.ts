@@ -1,4 +1,4 @@
-import { Usuario } from '@prisma/client';
+import { Usuario } from '@prisma/main/client';
 import { Request } from 'express';
 import { LoginDto } from './login.dto';
 

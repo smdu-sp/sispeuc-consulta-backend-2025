@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums } from '@prisma/main;client';
+import { $Enums } from '@prisma/main/client';
 import {
   IsBoolean,
   IsEmail,
